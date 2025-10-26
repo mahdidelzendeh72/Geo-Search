@@ -1,0 +1,42 @@
+@Sample_HostAddress = http://localhost:5110
+
+###
+# Search gas stations within a bounding box
+POST {{Sample_HostAddress}}/api/gasstationgeo/search-bounding-box
+Content-Type: application/json
+Accept: application/json
+
+{
+    "minimumCoordinate": { "latitude": 30.0502, "longitude": -50.9860 },
+    "maximumCoordinate": { "latitude": 40.7328, "longitude": -74.0060 }
+}
+
+###
+# Find the nearest gas station to a coordinate
+POST {{Sample_HostAddress}}/api/gasstationgeo/find-nearest-gas-station
+Content-Type: application/json
+Accept: application/json
+
+{
+    "latitude": 40.7218,
+    "longitude": -73.9950
+}
+
+###
+# (Optional) Seed 10 sample gas stations via your set endpoint
+POST {{Sample_HostAddress}}/api/gasstationgeo/set
+Content-Type: application/json
+Accept: application/json
+
+[
+    { "id": 1, "name": "Gas Station #1", "coordinate": { "latitude": 40.7129, "longitude": -74.0055 } },
+    { "id": 2, "name": "Gas Station #2", "coordinate": { "latitude": 40.7135, "longitude": -74.0040 } },
+    { "id": 3, "name": "Gas Station #3", "coordinate": { "latitude": 40.7140, "longitude": -74.0025 } },
+    { "id": 4, "name": "Gas Station #4", "coordinate": { "latitude": 40.7150, "longitude": -74.0010 } },
+    { "id": 5, "name": "Gas Station #5", "coordinate": { "latitude": 40.7160, "longitude": -74.0000 } },
+    { "id": 6, "name": "Gas Station #6", "coordinate": { "latitude": 40.7170, "longitude": -73.9990 } },
+    { "id": 7, "name": "Gas Station #7", "coordinate": { "latitude": 40.7180, "longitude": -73.9980 } },
+    { "id": 8, "name": "Gas Station #8", "coordinate": { "latitude": 40.7190, "longitude": -73.9970 } },
+    { "id": 9, "name": "Gas Station #9", "coordinate": { "latitude": 40.7200, "longitude": -73.9960 } },
+    { "id": 10, "name": "Gas Station #10", "coordinate": { "latitude": 40.7210, "longitude": -73.9950 } }
+]
