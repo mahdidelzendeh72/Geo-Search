@@ -46,6 +46,12 @@ Configure Redis Connection
   }
 }
 ```
+
+Run Redis On Docket
+```bash
+docker run -d --name redis -p 6379:6379 redis:<version>
+```
+
 Run the Application
 ```bash
 dotnet run

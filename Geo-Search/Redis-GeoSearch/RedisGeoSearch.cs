@@ -8,19 +8,30 @@ namespace Geo_Search.Redis_GeoSearch
 {
     public class RedisGeoSearch(IConnectionMultiplexer redis) : IGeoSearch<GasStation>
     {
-        private IDatabase _geoDb => redis.GetDatabase(1);
+        private IDatabase GeoDb => redis.GetDatabase(1);
         const string GeoKey = "Gas-Stations-Geo-Data";
         public async Task<List<GasStation>> SearchBaseBoundingBox(GeoBoundingBox boundingBox)
         {
-            var (centerLat, centerLon, widthKm, heightKm) = GeoUtility.CalculateBoundingBoxDimensions(boundingBox.MinimumCoordinate.Latitude,
-                                                                                                      boundingBox.MinimumCoordinate.Longitude,
-                                                                                                      boundingBox.MaximumCoordinate.Latitude,
-                                                                                                      boundingBox.MaximumCoordinate.Longitude);
+            var (centerLat, centerLon, widthKm, heightKm) =
+                GeoUtility.CalculateBoundingBoxDimensions(
+                    boundingBox.MinimumCoordinate.Latitude,
+                    boundingBox.MinimumCoordinate.Longitude,
+                    boundingBox.MaximumCoordinate.Latitude,
+                    boundingBox.MaximumCoordinate.Longitude);
 
-            var results = await _geoDb.GeoSearchAsync(GeoKey, centerLon, centerLat, new GeoSearchBox(heightKm, widthKm, GeoUnit.Kilometers));
-            var allGasStation = results?.Select(r => JsonSerializer.Deserialize<GasStation>(r.Member!.ToString())).Where(h => h != null).ToList() ?? [];
+            var results = await GeoDb.GeoSearchAsync(
+                GeoKey,
+                centerLon,
+                centerLat,
+                new GeoSearchBox(heightKm, widthKm, GeoUnit.Kilometers));
 
-            return allGasStation;
+            var allGasStations = results?
+                .Select(r => JsonSerializer.Deserialize<GasStation>(r.Member!.ToString()))
+                .OfType<GasStation>()
+                .ToList()
+                ?? [];
+
+            return allGasStations;
 
         }
 
@@ -28,7 +39,7 @@ namespace Geo_Search.Redis_GeoSearch
         {
             if (geoModels == null || geoModels.Count == 0)
                 return;
-            var batch = _geoDb.CreateBatch();
+            var batch = GeoDb.CreateBatch();
             var tasks = new List<Task>();
 
             foreach (var geo in geoModels)
@@ -46,7 +57,7 @@ namespace Geo_Search.Redis_GeoSearch
         {
             var shape = new GeoSearchCircle(10, GeoUnit.Kilometers); // radius in km
 
-            GeoRadiusResult[] results = await _geoDb.GeoSearchAsync(
+            GeoRadiusResult[] results = await GeoDb.GeoSearchAsync(
                 key: GeoKey,
                 longitude: coordinate.Longitude,
                 latitude: coordinate.Latitude,
@@ -56,16 +67,15 @@ namespace Geo_Search.Redis_GeoSearch
                 options: GeoRadiusOptions.WithCoordinates);
 
             var nearest = results?.FirstOrDefault();
-            return nearest == null
-                ? null
-                : JsonSerializer.Deserialize<GasStation>(nearest!.ToString());
+            if (nearest?.Member is null)
+                return null;
+
+            var json = nearest.ToString();
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            var gasStation = JsonSerializer.Deserialize<GasStation>(json);
+            return gasStation;
         }
     }
-    public class GasStation : IGeoModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public Coordinate Coordinate { get; set; }
-    }
-
 }

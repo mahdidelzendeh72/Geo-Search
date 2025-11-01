@@ -1,4 +1,6 @@
 ﻿using Geo_Search.Interface;
+using Geo_Search.Models;
+using Geo_Search.NetTopology_GeoSearch;
 using Geo_Search.Redis_GeoSearch;
 using Microsoft.OpenApi.Models;
 using Sample;
@@ -12,7 +14,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379"));
 
 // Register Geo Search Service
-builder.Services.AddScoped<IGeoSearch<GasStation>, RedisGeoSearch>();
+builder.Services.AddScoped<IGeoSearch<GasStation>, NetTopologyGeoSearch>();
+//builder.Services.AddScoped<IGeoSearch<GasStation>, RedisGeoSearch>();
+
 // Background Seeder
 builder.Services.AddHostedService<GasStationGeoSeeder>();
 
