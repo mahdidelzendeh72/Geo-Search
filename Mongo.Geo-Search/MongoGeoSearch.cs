@@ -5,13 +5,9 @@ using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace Mongo.Geo_Search
 {
-    public class MongoGeoSearch : IGeoSearch<PetShopDto>
+    public class MongoGeoSearch(IMongoCollection<PetShopDocument> _collection) : IGeoSearch<PetShopDto>
     {
-        public MongoGeoSearch(IMongoDatabase database)
-        {
-            _collection = database.GetCollection<PetShopDocument>("petshop");
-        }
-        private readonly IMongoCollection<PetShopDocument> _collection;
+    
         public async Task<PetShopDto?> FindNearestGeoModel(Coordinate coordinate)
         {
             var point = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(

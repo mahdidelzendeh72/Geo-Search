@@ -1,0 +1,31 @@
+﻿@PetShopGeo_HostAddress = http://localhost:5110
+
+###
+# 🐾 Seed sample PetShop data
+POST {{PetShopGeo_HostAddress}}/seed
+Content-Type: application/json
+Accept: application/json
+
+###
+
+# 📍 Find the nearest PetShop to a given coordinate
+GET {{PetShopGeo_HostAddress}}/nearest?lat=40.7130&lng=-74.0080
+Accept: application/json
+
+###
+
+# 🗺️ Find PetShops within a bounding box
+POST {{PetShopGeo_HostAddress}}/within
+Content-Type: application/json
+Accept: application/json
+
+{
+  "minimumCoordinate": {
+    "latitude": 40.7120,
+    "longitude": -74.0120
+  },
+  "maximumCoordinate": {
+    "latitude": 40.7160,
+    "longitude": -74.0040
+  }
+}

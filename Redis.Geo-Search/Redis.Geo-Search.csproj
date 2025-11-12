@@ -11,5 +11,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Geo-Search\Geo-Search.csproj" />
+	  <ProjectReference Include="..\Mongo.Geo-Search\Mongo.Geo-Search.csproj" />
 	</ItemGroup>
 </Project>

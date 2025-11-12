@@ -1,10 +1,15 @@
 ﻿using Microsoft.OpenApi.Models;
+using Mongo.Geo_Search;
 using Sample.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//use redis >>>> uncomment bellow code
+//builder.Services.RegisterRedisGeoServices(builder.Configuration);
 
-builder.Services.RegisterRedisGeoServices(builder.Configuration);
+//use mongo
+builder.Services.RegisterMongoGeoServices(builder.Configuration);
+
 
 // Controllers
 builder.Services.AddControllers();
