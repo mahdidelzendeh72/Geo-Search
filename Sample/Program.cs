@@ -1,20 +1,10 @@
-﻿using Geo_Search.Interface;
-using Geo_Search.Redis_GeoSearch;
-using Microsoft.OpenApi.Models;
-using Sample;
-using StackExchange.Redis;
+﻿using Microsoft.OpenApi.Models;
+using Sample.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-// Register Redis Connection
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379"));
-
-// Register Geo Search Service
-builder.Services.AddScoped<IGeoSearch<GasStation>, RedisGeoSearch>();
-// Background Seeder
-builder.Services.AddHostedService<GasStationGeoSeeder>();
+builder.Services.RegisterRedisGeoServices(builder.Configuration);
 
 // Controllers
 builder.Services.AddControllers();
@@ -25,9 +15,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Gas Station Geo API",
+        Title = "Geo Search API",
         Version = "v1",
-        Description = "API for searching gas stations using Redis GEO features."
+        Description = "API for geo searching ."
     });
 });
 
@@ -37,7 +27,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gas Station Geo API v1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Geo Search API");
     c.RoutePrefix = string.Empty; // Swagger at root URL
 });
 app.MapControllers();

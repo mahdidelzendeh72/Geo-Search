@@ -10,6 +10,9 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\Geo-Search\Geo-Search.csproj" />
+	  <ProjectReference Include="..\Redis.Geo-Search\Redis.Geo-Search.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Mongo\" />
 	</ItemGroup>
 </Project>

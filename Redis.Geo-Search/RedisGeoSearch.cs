@@ -61,11 +61,5 @@ namespace Geo_Search.Redis_GeoSearch
                 : JsonSerializer.Deserialize<GasStation>(nearest!.ToString());
         }
     }
-    public class GasStation : IGeoModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public Coordinate Coordinate { get; set; }
-    }
 
 }

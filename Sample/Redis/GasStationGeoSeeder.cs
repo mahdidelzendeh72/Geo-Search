@@ -1,4 +1,4 @@
-﻿namespace Sample
+﻿namespace Sample.Redis
 {
     using Geo_Search.Interface;
     using Geo_Search.Models;
